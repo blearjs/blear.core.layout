@@ -20,6 +20,7 @@ var httpServer = function (req, res, next) {
 module.exports = function (coverage) {
     var preprocessors = {};
     var reporters = ['progress'];
+    var browsers = [];
 
     if (coverage) {
         preprocessors = {
@@ -27,6 +28,12 @@ module.exports = function (coverage) {
             './src/index.js': ['coverage']
         };
         reporters.push('coverage');
+    }
+
+    if(process.env.TRAVIS) {
+        browsers = ['Chrome_travis_ci'];
+    } else {
+        browsers = ['Chrome'];
     }
 
     return function (config) {
@@ -119,12 +126,20 @@ module.exports = function (coverage) {
 
             // start these browsers
             // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-            browsers: [],
+            browsers: browsers,
 
 
             // Continuous Integration mode
             // if true, Karma captures browsers, runs the tests and exits
             singleRun: true,
+
+
+            customLaunchers: {
+                Chrome_travis_ci: {
+                    base: 'Chrome',
+                    flags: ['--no-sandbox']
+                }
+            },
 
 
             middleware: ['httpServer'],
