@@ -8,9 +8,8 @@
 'use strict';
 
 
-var arg = process.argv.slice(2);
-var COVERAGE = arg.indexOf('--coverage') > -1 || process.env.KARMA_TEST === 'coverage';
 var TRAVIS = process.env.TRAVIS;
+var COVERAGE = !TRAVIS;
 
 
 // http 服务器
@@ -96,8 +95,15 @@ module.exports = function (config) {
         // optionally, configure the reporter
         // 覆盖率报告
         coverageReporter: {
-            type: 'lcov',
-            dir: './coverage/'
+            reporters: [
+                {
+                    type: 'lcov',
+                    dir: './coverage/'
+                },
+                {
+                    type: 'text-summary'
+                }
+            ]
         },
 
 
