@@ -8,34 +8,36 @@
 'use strict';
 
 
+var arg = process.argv.slice(2);
+var COVERAGE = arg.indexOf('--coverage') > -1 || process.env.KARMA_TEST === 'coverage';
+var TRAVIS = process.env.TRAVIS;
+
+
 // http 服务器
 var httpServer = function (req, res, next) {
     next();
 };
 
 
-var arg = process.argv[2];
-var coverage = arg === '--coverage';
-
-var preprocessors = {};
-var reporters = ['progress'];
-var browsers = [];
-
-if (coverage) {
-    preprocessors = {
-        // 原始模块，需要测试覆盖率
-        './src/index.js': ['coverage']
-    };
-    reporters.push('coverage');
-}
-
-if (process.env.TRAVIS) {
-    browsers = ['Chrome_travis_ci'];
-} else {
-    browsers = ['Chrome'];
-}
-
 module.exports = function (config) {
+    var preprocessors = {};
+    var reporters = ['progress'];
+    var browsers = [];
+
+    if (COVERAGE) {
+        preprocessors = {
+            // 原始模块，需要测试覆盖率
+            './src/index.js': ['coverage']
+        };
+        reporters.push('coverage');
+    }
+
+    if (TRAVIS) {
+        browsers = ['Chrome_travis_ci'];
+    } else {
+        browsers = ['Chrome'];
+    }
+
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)

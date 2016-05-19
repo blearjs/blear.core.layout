@@ -4,7 +4,8 @@
   "description": "DOM 布局计算",
   "scripts": {
     "live": "browser-sync start --config bs-config.js",
-    "test": "node ./node_modules/.bin/karma start karma.conf.js --single-run"
+    "test": "node ./node_modules/.bin/karma start karma.conf.js --single-run",
+    "test:coverage": "node ./node_modules/.bin/karma start karma.conf.js --single-run --coverage"
   },
   "preferGlobal": false,
   "bin": {},
