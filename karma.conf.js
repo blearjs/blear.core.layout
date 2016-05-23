@@ -9,8 +9,6 @@
 
 
 var TRAVIS = process.env.TRAVIS;
-var COVERAGE = !TRAVIS;
-
 
 // http 服务器
 var httpServer = function (req, res, next) {
@@ -19,23 +17,23 @@ var httpServer = function (req, res, next) {
 
 
 module.exports = function (config) {
-    var preprocessors = {};
-    var reporters = ['progress'];
     var browsers = [];
-
-    if (COVERAGE) {
-        preprocessors = {
-            // 原始模块，需要测试覆盖率
-            './src/index.js': ['coverage']
-        };
-        reporters.push('coverage');
-    }
+    var reporters = ['progress', 'coverage'];
+    var coverageReporters = [{
+        type: 'text-summary'
+    }];
 
     if (TRAVIS) {
         browsers = ['Chrome_travis_ci'];
+        reporters.push('coveralls');
+        coverageReporters.push({
+            type: 'lcov',
+            dir: './coverage/'
+        });
     } else {
         browsers = ['Chrome'];
     }
+
 
     config.set({
 
@@ -89,21 +87,16 @@ module.exports = function (config) {
 
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-        preprocessors: preprocessors,
+        preprocessors: {
+            // 原始模块，需要测试覆盖率
+            './src/index.js': ['coverage']
+        },
 
 
         // optionally, configure the reporter
         // 覆盖率报告
         coverageReporter: {
-            reporters: [
-                {
-                    type: 'lcov',
-                    dir: './coverage/'
-                },
-                {
-                    type: 'text-summary'
-                }
-            ]
+            reporters: coverageReporters
         },
 
 

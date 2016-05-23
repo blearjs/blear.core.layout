@@ -12,6 +12,7 @@ var layout = require('../src/index.js');
 describe('测试文件', function () {
     var div1El = document.createElement('div');
     var div2El = document.createElement('div');
+    var div3El = document.createElement('div');
 
     div1El.style.position = div2El.style.position = 'relative';
     div1El.style.width = div2El.style.width = '100px';
@@ -24,10 +25,12 @@ describe('测试文件', function () {
     div2El.style.boxSizing = 'border-box';
     document.body.appendChild(div1El);
     document.body.appendChild(div2El);
+    document.body.appendChild(div3El);
 
     afterAll(function () {
         document.body.removeChild(div1El);
         document.body.removeChild(div2El);
+        document.body.removeChild(div3El);
     });
 
     it('.width:content-box', function (done) {
@@ -185,6 +188,11 @@ describe('测试文件', function () {
         expect(scrollTop2).toEqual(100);
     });
 
+    it('.positioned', function () {
+        expect(layout.positioned(div1El)).toBe(true);
+        expect(layout.positioned(div2El)).toBe(true);
+    });
+
     it('.offset', function () {
         expect(layout.offsetLeft(window)).toEqual(0);
         expect(layout.offsetTop(window)).toEqual(0);
@@ -193,6 +201,13 @@ describe('测试文件', function () {
         expect(layout.offsetTop(document)).toEqual(0);
 
         expect(layout.offsetLeft(div1El)).toBeGreaterThan(0);
+        layout.offsetLeft(div1El, 100);
+        expect(layout.offsetLeft(div3El)).toBeGreaterThan(0);
+        layout.offsetLeft(div3El, 100);
+        layout.offsetTop(div3El, 100);
+        expect(layout.offsetLeft(div1El)).toEqual(100);
+        expect(layout.offsetLeft(div3El)).toEqual(100);
+        expect(layout.offsetTop(div3El)).toEqual(100);
         expect(layout.offsetTop(div1El)).toBeGreaterThan(0);
     });
 });
