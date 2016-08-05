@@ -189,7 +189,7 @@ var sizing = function (el, name, boundaryIndex) {
         };
     }
 
-    var val = el[STR_OFFSET + Name];
+    var val = el.getBoundingClientRect()[name];
     var isHorizontal = name === STR_WIDTH;
     var directionList = isHorizontal ? [STR_LEFT, 'Right'] : [STR_TOP, 'Bottom'];
     var paddingWidth = 0;
