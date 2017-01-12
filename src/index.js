@@ -13,10 +13,10 @@
 'use strict';
 
 var attribute = require('blear.core.attribute');
-var access =    require('blear.utils.access');
-var array =     require('blear.utils.array');
-var number =    require('blear.utils.number');
-var typeis =    require('blear.utils.typeis');
+var access = require('blear.utils.access');
+var array = require('blear.utils.array');
+var number = require('blear.utils.number');
+var typeis = require('blear.utils.typeis');
 
 var win = window;
 var doc = win.document;
@@ -405,7 +405,7 @@ var buildScrollExports = function (scrollIndex) {
  * @param [scrollLeft] {Number} 值
  * @type function
  */
-var scrollLeft = exports.scrollLeft = buildScrollExports(SCROLL_LEFT_INDEX);
+exports.scrollLeft = buildScrollExports(SCROLL_LEFT_INDEX);
 
 
 /**
@@ -414,7 +414,7 @@ var scrollLeft = exports.scrollLeft = buildScrollExports(SCROLL_LEFT_INDEX);
  * @param [scrollTop] {Number} 值
  * @type function
  */
-var scrollTop = exports.scrollTop = buildScrollExports(SCROLL_TOP_INDEX);
+exports.scrollTop = buildScrollExports(SCROLL_TOP_INDEX);
 
 
 /**
@@ -453,22 +453,16 @@ var positioned = exports.positioned = function (el) {
  * @returns {{}}
  */
 var getOffset = function (el) {
-    var box = {
-        top: 0,
-        left: 0
-    };
     var ret = {};
-    var deltaLeft = 0;
-    var deltaTop = 0;
 
-    if (!isWindowOrDocument(el)) {
-        box = el.getBoundingClientRect();
-        deltaLeft = scrollLeft(win);
-        deltaTop = scrollTop(win);
+    if (isWindowOrDocument(el)) {
+        ret[OFFSET_TOP_INDEX] = 0;
+        ret[OFFSET_LEFT_INDEX] = 0;
+        return ret;
     }
 
-    ret[OFFSET_TOP_INDEX] = box.top + deltaTop;
-    ret[OFFSET_LEFT_INDEX] = box.left + deltaLeft;
+    ret[OFFSET_TOP_INDEX] = el.offsetTop;
+    ret[OFFSET_LEFT_INDEX] = el.offsetLeft;
 
     return ret;
 };
