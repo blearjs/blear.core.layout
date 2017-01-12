@@ -359,21 +359,22 @@ var setScrollSize = function (scrollIndex, el, val) {
             }
             break;
 
-        case SCROLL_WIDTH_INDEX:
-           if (isWindowOrDocument(el)) {
-               htmlEl[STR_SCROLL + upperCaseFirstLetter(STR_WIDTH)] = val;
-           } else {
-               el[STR_SCROLL + upperCaseFirstLetter(STR_WIDTH)] = val;
-           }
-           break;
-
-        case SCROLL_HEIGHT_INDEX:
-           if (isWindowOrDocument(el)) {
-               htmlEl[STR_SCROLL + upperCaseFirstLetter(STR_HEIGHT)] = val;
-           } else {
-               el[STR_SCROLL + upperCaseFirstLetter(STR_HEIGHT)] = val;
-           }
-           break;
+        // 忽略设置元素的 scrollWidth、scrollHeight
+        // case SCROLL_WIDTH_INDEX:
+        //    if (isWindowOrDocument(el)) {
+        //        htmlEl[STR_SCROLL + upperCaseFirstLetter(STR_WIDTH)] = val;
+        //    } else {
+        //        el[STR_SCROLL + upperCaseFirstLetter(STR_WIDTH)] = val;
+        //    }
+        //    break;
+        //
+        // case SCROLL_HEIGHT_INDEX:
+        //    if (isWindowOrDocument(el)) {
+        //        // htmlEl[STR_SCROLL + upperCaseFirstLetter(STR_HEIGHT)] = val;
+        //    } else {
+        //        el[STR_SCROLL + upperCaseFirstLetter(STR_HEIGHT)] = val;
+        //    }
+        //    break;
     }
 };
 
