@@ -360,6 +360,8 @@ var setScrollSize = function (scrollIndex, el, val) {
             break;
 
         // 忽略设置元素的 scrollWidth、scrollHeight
+        // scrollWidth、scrollHeight 是由其内容撑起来的，
+        // 外围元素无法改变
         // case SCROLL_WIDTH_INDEX:
         //    if (isWindowOrDocument(el)) {
         //        htmlEl[STR_SCROLL + upperCaseFirstLetter(STR_WIDTH)] = val;
