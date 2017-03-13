@@ -32,6 +32,8 @@ var SCROLL_WIDTH_INDEX = 5;
 var SCROLL_HEIGHT_INDEX = 6;
 var OFFSET_TOP_INDEX = 7;
 var OFFSET_LEFT_INDEX = 8;
+var CLIENT_TOP_INDEX = 9;
+var CLIENT_LEFT_INDEX = 10;
 var STR_CLIENT = 'client';
 var STR_OFFSET = 'offset';
 var STR_SCROLL = 'scroll';
@@ -408,7 +410,7 @@ var buildScrollExports = function (scrollIndex) {
  * @param [scrollLeft] {Number} 值
  * @type function
  */
-exports.scrollLeft = buildScrollExports(SCROLL_LEFT_INDEX);
+var scrollLeft = exports.scrollLeft = buildScrollExports(SCROLL_LEFT_INDEX);
 
 
 /**
@@ -417,7 +419,7 @@ exports.scrollLeft = buildScrollExports(SCROLL_LEFT_INDEX);
  * @param [scrollTop] {Number} 值
  * @type function
  */
-exports.scrollTop = buildScrollExports(SCROLL_TOP_INDEX);
+var scrollTop = exports.scrollTop = buildScrollExports(SCROLL_TOP_INDEX);
 
 
 /**
@@ -470,17 +472,43 @@ var getOffset = function (el) {
     return ret;
 };
 
+/**
+ * 获取元素的 offset 位移，从元素的边框开始计算，到客户端边缘
+ * @param el
+ * @returns {{}}
+ */
+var getClient = function (el) {
+    var box = {
+        top: 0,
+        left: 0
+    };
+    var ret = {};
+    var deltaLeft = 0;
+    var deltaTop = 0;
+
+    if (!isWindowOrDocument(el)) {
+        box = el.getBoundingClientRect();
+        deltaLeft = scrollLeft(win);
+        deltaTop = scrollTop(win);
+    }
+
+    ret[CLIENT_TOP_INDEX] = box.top + deltaTop;
+    ret[CLIENT_LEFT_INDEX] = box.left + deltaLeft;
+
+    return ret;
+};
+
 
 /**
  * 获取元素的 offset 位移，从元素的边框开始计算，到文档边缘
  * @param el
  * @param index
+ * @param old
  * @param val
  * @returns {{}}
  */
-var setOffset = function (el, index, val) {
-    var ret = getOffset(el);
-    var original = ret[index];
+var setOffsetOrClient = function (el, index, old, val) {
+    var original = old[index];
     var delta = val - original;
 
     if (!positioned(el)) {
@@ -491,10 +519,12 @@ var setOffset = function (el, index, val) {
 
     switch (index) {
         case OFFSET_LEFT_INDEX:
+        case CLIENT_LEFT_INDEX:
             oldKey = 'left';
             break;
 
         case OFFSET_TOP_INDEX:
+        case CLIENT_TOP_INDEX:
             oldKey = 'top';
             break;
     }
@@ -519,7 +549,7 @@ exports.offsetLeft = function (el, val) {
             return getOffset(el)[OFFSET_LEFT_INDEX];
         },
         set: function (val) {
-            setOffset(el, OFFSET_LEFT_INDEX, val);
+            setOffsetOrClient(el, OFFSET_LEFT_INDEX, getOffset(el), val);
         },
         setLength: 1
     }, args);
@@ -540,7 +570,49 @@ exports.offsetTop = function (el, val) {
             return getOffset(el)[OFFSET_TOP_INDEX];
         },
         set: function (val) {
-            setOffset(el, OFFSET_TOP_INDEX, val);
+            setOffsetOrClient(el, OFFSET_TOP_INDEX, getOffset(el), val);
+        },
+        setLength: 1
+    }, args);
+};
+
+
+/**
+ * 获取元素在客户端中的左位移
+ * @param el {HTMLElement|Document|Window} 元素
+ * @param [val] {Number} 设置值
+ * @returns {Number}
+ */
+exports.clienttLeft = function (el, val) {
+    var args = access.args(arguments).slice(1);
+
+    return access.getSet({
+        get: function () {
+            return getClient(el)[CLIENT_LEFT_INDEX];
+        },
+        set: function (val) {
+            setOffsetOrClient(el, CLIENT_LEFT_INDEX, getClient(el), val);
+        },
+        setLength: 1
+    }, args);
+};
+
+
+/**
+ * 获取元素在客户端的上位移
+ * @param el {HTMLElement|Document|Window} 元素
+ * @param [val] {Number} 设置值
+ * @returns {Number}
+ */
+exports.clientTop = function (el, val) {
+    var args = access.args(arguments).slice(1);
+
+    return access.getSet({
+        get: function () {
+            return getClient(el)[CLIENT_TOP_INDEX];
+        },
+        set: function (val) {
+            setOffsetOrClient(el, CLIENT_TOP_INDEX, getClient(el), val);
         },
         setLength: 1
     }, args);
