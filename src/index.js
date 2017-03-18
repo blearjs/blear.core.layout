@@ -583,7 +583,7 @@ exports.offsetTop = function (el, val) {
  * @param [val] {Number} 设置值
  * @returns {Number}
  */
-exports.clienttLeft = function (el, val) {
+exports.clientLeft = function (el, val) {
     var args = access.args(arguments).slice(1);
 
     return access.getSet({

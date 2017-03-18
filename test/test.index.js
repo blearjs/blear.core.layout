@@ -210,4 +210,22 @@ describe('测试文件', function () {
         expect(layout.offsetTop(div3El)).toEqual(100);
         expect(layout.offsetTop(div1El)).toBeGreaterThan(0);
     });
+
+    it('.client', function () {
+        expect(layout.clientLeft(window)).toEqual(0);
+        expect(layout.clientTop(window)).toEqual(0);
+
+        expect(layout.clientLeft(document)).toEqual(0);
+        expect(layout.clientTop(document)).toEqual(0);
+
+        expect(layout.clientLeft(div1El)).toBeGreaterThan(0);
+        layout.clientLeft(div1El, 100);
+        expect(layout.clientLeft(div3El)).toBeGreaterThan(0);
+        layout.clientLeft(div3El, 100);
+        layout.clientTop(div3El, 100);
+        expect(layout.clientLeft(div1El)).toEqual(100);
+        expect(layout.clientLeft(div3El)).toEqual(100);
+        expect(layout.clientTop(div3El)).toEqual(100);
+        expect(layout.clientTop(div1El)).toBeGreaterThan(0);
+    });
 });
