@@ -453,7 +453,7 @@ var positioned = exports.positioned = function (el) {
 
 
 /**
- * 获取元素的 offset 位移，从元素的边框开始计算，到文档边缘
+ * 获取元素的 offset 位移，从元素的边框开始计算，到最近的定位祖先元素
  * @param el
  * @returns {{}}
  */
